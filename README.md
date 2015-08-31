@@ -3,13 +3,13 @@
 # React Reactive Class
 
 With React Reactive Class, you can create Reactive Components, which
-listen to events and change themselves.
+listen to events and re-render themselves.
 
-`react-reactive-class` comes with a set of reactive DOM elements (button, div, span, etc) and a function to wrap your component to be a reactive component.
+`react-reactive-class` comes with a set of reactive DOM elements (button, div, span, etc) and a function to wrap your component to be a Reactive Component.
 
 Once you created a Reactive Component, you pass a `props provider` to it, and it will listen to the provider, when the provider emits new props, Reactive Component will re-render it self.
 
-You can use Even Emitter or Rx.Observable as `props provider`.
+You can use Event Emitter or Rx.Observable as `props provider`.
 
 ## Installation
 ```
@@ -86,13 +86,14 @@ class XText extends React.Component {
 ```
 
 ### Config Reactive Component
-By default, the props provider attribute is `ee` and Reactive Component will listen to `props` event. You can custom those value.
+By default, the props provider attribute is `ee` and Reactive Component will listen to `props` event. You can custom those values.
 
 > Event name has no effect when using Rx.Observable as props provider.
 
 #### ES5/ES5
 ```javascript
 const XText = reactive(Text, 'awesomeProvider', 'new-props');
+
 <XText awesomeProvider={window.ee} />
 window.ee.emit('new-props', {children: 'Awesome!'});
 ```

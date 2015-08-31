@@ -53,7 +53,7 @@ window.props$.onNext({style: {color: 'blue'}});
 // you can open your console and play around
 ```
 
-### Use react() function to wrap your component
+### Use reactive() function to wrap your component
 
 #### ES5/ES5
 ```javascript

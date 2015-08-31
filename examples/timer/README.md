@@ -1,6 +1,6 @@
 # Timer Example
 
-In this a clone of timer app on react's official site, rewrite in reactive way.
+This is a clone of timer app on React's official site, rewrite in reactive way.
 
 ## How to run
 ```

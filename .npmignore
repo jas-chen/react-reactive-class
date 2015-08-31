@@ -4,4 +4,4 @@ examples
 .eslintrc
 .gitignore
 .npmignore
-.webpack.config.js
+webpack.config.js

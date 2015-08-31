@@ -12,8 +12,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'react-reactive-class': '../../src/index',
-      'rx': 'rx-lite'
+      'react-reactive-class': '../../src/index'
     },
     extensions: ['', '.js']
   }

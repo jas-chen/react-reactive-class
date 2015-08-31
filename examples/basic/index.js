@@ -44,7 +44,7 @@ class App extends React.Component {
 
   handleClick() {
     const props = {children: new Date().getTime()};
-    
+
     this.ee.emit('props', props);
     this.props$.onNext(props);
   }

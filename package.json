@@ -1,0 +1,32 @@
+{
+  "name": "react-reactive-class",
+  "version": "0.1.0",
+  "description": "create reactive react classes",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jas-chen/react-reactive-class.git"
+  },
+  "main": "lib/index.js",
+  "scripts": {
+    "clean": "rimraf lib dist",
+    "build:lib": "babel src --out-dir lib",
+    "build:umd": "webpack src/index.js dist/react-reactive-class.js --display-modules --progress && NODE_ENV=production webpack src/index.js dist/react-reactive-class.min.js --display-modules --progress",
+    "build": "npm run build:lib && npm run build:umd",
+    "lint": "eslint src",
+    "prepublish": "npm run clean && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jas Chen",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^5.8.22",
+    "babel-eslint": "^4.1.0",
+    "babel-loader": "^5.3.2",
+    "eslint": "^1.3.1",
+    "eslint-config-airbnb": "0.0.8",
+    "eslint-plugin-react": "^3.3.0",
+    "react": "^0.13.3",
+    "rimraf": "^2.4.3",
+    "webpack": "^1.11.0"
+  }
+}

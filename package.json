@@ -2,11 +2,19 @@
   "name": "react-reactive-class",
   "version": "0.1.0",
   "description": "create reactive react classes",
+  "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jas-chen/react-reactive-class.git"
+    "url": "https://github.com/jas-chen/react-reactive-class.git"
   },
-  "main": "lib/index.js",
+  "keywords": [
+    "react",
+    "reactjs",
+    "reactive",
+    "RxJS",
+    "Event",
+    "flux"
+  ],
   "scripts": {
     "clean": "rimraf lib dist",
     "build:lib": "babel src --out-dir lib",

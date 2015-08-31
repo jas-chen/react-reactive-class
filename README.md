@@ -32,14 +32,13 @@ window.ee = new EventEmitter();
 window.props$ = new Rx.Subject();
 
 class App extends React.Component {
-
   render() {
     console.log('App rendered.');
 
     return (
       <div>
-        <Xdiv ee={window.ee} />
-        <Xdiv ee={window.props$} />
+        <Xdiv ee={window.ee}>Will listen to Event Emitter</Xdiv>
+        <Xdiv ee={window.props$}>Will subscribe to Rx.Observable</Xdiv>
       </div>
     );
   }

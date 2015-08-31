@@ -3,7 +3,7 @@
 # React Reactive Class
 
 With React Reactive Class, you can create Reactive Components, which
-listen to events and change them self.
+listen to events and change themselves.
 
 `react-reactive-class` comes with a set of reactive DOM elements (button, div, span, etc) and a function to wrap your component to be a reactive component.
 

@@ -7,7 +7,7 @@ listen to events and re-render themselves.
 
 `react-reactive-class` comes with a set of reactive DOM elements (button, div, span, etc) and a function to wrap your component to be a Reactive Component.
 
-Once you created a Reactive Component, you pass a `props provider` to it, and it will listen to the provider, when the provider emits new props, Reactive Component will re-render it self.
+Once you created a Reactive Component, you pass a `props provider` to it, and it will listen to the provider, when the provider emits new props, Reactive Component will re-render itself.
 
 You can use Event Emitter or Rx.Observable as `props provider`.
 
@@ -20,11 +20,11 @@ npm install --save react-reactive-class
 
 ### Use reactive DOM elements
 ```javascript
-import {dom} from 'react-reactive-class';
-
 import React from 'react';
 import {EventEmitter} from 'events';
 import Rx from 'rx';
+
+import {dom} from 'react-reactive-class';
 
 const {div:Xdiv} = dom;
 
@@ -52,6 +52,8 @@ window.ee.emit('props', {style: {color: 'red'}});
 window.props$.onNext({style: {color: 'blue'}});
 // you can open your console and play around
 ```
+
+![Demo](./doc/image.gif)
 
 ### Use reactive() function to wrap your component
 

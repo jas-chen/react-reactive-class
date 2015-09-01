@@ -53,7 +53,7 @@ window.props$.onNext({style: {color: 'blue'}});
 // you can open your console and play around
 ```
 
-![Demo](./doc/image.gif)
+![Demo](./doc/demo.gif)
 
 ### Use reactive() function to wrap your component
 

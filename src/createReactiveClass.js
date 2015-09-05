@@ -25,15 +25,15 @@ export default function createReactiveClass(tag, providerName = 'ee', eventName 
       this.state = props;
     }
 
-    componentWillMount() {
-      this.addListener(this.props[providerName]);
-    }
-
     componentWillReceiveProps(nextProps) {
       if (nextProps[providerName] !== this.props[providerName]) {
         this.removeListener();
         this.addListener(nextProps[providerName]);
       }
+    }
+
+    componentDidMount() {
+      this.addListener(this.props[providerName]);
     }
 
     componentWillUnmount() {

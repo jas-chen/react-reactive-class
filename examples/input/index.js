@@ -17,15 +17,14 @@ class App extends React.Component {
     console.log('App rendered.');
 
     const inputEv$ = new Rx.Subject();
-    const inputValue$ = inputEv$.map(e => e.target.value);
+    const inputValue$ = inputEv$.map(e => e.target.value).startWith(this.props.text);
 
     return (
       <div>
         <Xinput ee={inputValue$.map(toProp('value'))}
-                value={this.props.text}
                 onChange={inputEv$.onNext.bind(inputEv$)} />
 
-        <Xdiv ee={inputValue$.map(toProp('children'))}>{this.props.text}</Xdiv>
+        <Xdiv ee={inputValue$.map(toProp('children'))} />
       </div>
     );
   }

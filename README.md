@@ -57,7 +57,7 @@ window.props$.onNext({style: {color: 'blue'}});
 
 ### Use reactive() function to wrap your component
 
-#### ES5/ES5
+#### ES5/ES6
 ```javascript
 class Text extends React.Component {
   render() {
@@ -91,7 +91,7 @@ By default, the props provider attribute is `ee` and Reactive Component will lis
 
 > Event name has no effect when using Rx.Observable as props provider.
 
-#### ES5/ES5
+#### ES5/ES6
 ```javascript
 const XText = reactive(Text, 'awesomeProvider', 'new-props');
 

@@ -6,7 +6,8 @@ export default function createReactiveClass(tag) {
     constructor(props) {
       super(props);
       this.displayName = `ReactiveElement-${tag}`;
-      this.state = props;
+      this.state = pickProps(props);
+      this.state.mount = true;
     }
 
     addPropListener(name, prop$) {
@@ -21,13 +22,12 @@ export default function createReactiveClass(tag) {
           );
 
           if (mount === undefined) {
-            console.error(`value of ${name} should be 'mount', 'unmount' or 'toggle'`);
+            console.error("value of mount should be 'mount', 'unmount' or 'toggle'");
             return;
           }
 
           // prevent unnecessary re-render
-          if ( (typeof this.state.mount !== 'boolean' && mount)
-              || (mount === this.state.mount)) {
+          if (mount === this.state.mount) {
             return;
           }
 
@@ -62,50 +62,31 @@ export default function createReactiveClass(tag) {
       this.subscriptions = null;
     }
 
-    getElementInfo() {
-      return {
-        DOMNode: React.findDOMNode(this),
-        props: this.pickedProps
-      } ;
-    }
-
     componentWillMount() {
       this.subscribeProps();
-    }
-
-    componentDidMount() {
-      if (this.props.onDidMount) {
-        this.props.onDidMount(this.getElementInfo());
-      }
     }
 
     componentWillReceiveProps(nextProps) {
       this.subscribeProps();
     }
 
-    componentDidUpdate() {
-      if (this.props.onDidUpdate) {
-        this.props.onDidUpdate(this.getElementInfo());
-      }
-    }
-
     componentWillUnmount() {
       this.unsubscribeProps();
-      this.pickedProps = null;
-
-      if (this.props.onWillUnmount) {
-        this.props.onWillUnmount();
-      }
     }
 
     render() {
-      // this.state.mount may be undefined, don't use ! operator here.
-      if (this.state.mount === false) {
+      if (!this.state.mount) {
         return null;
       }
 
-      this.pickedProps = pickProps(this.state);
-      return React.createElement(tag, this.pickedProps, this.state.children);
+      const finalProps = {};
+      for (var key in this.state) {
+        if (key !== 'mount') {
+          finalProps[key] = this.state[key];
+        }
+      }
+
+      return React.createElement(tag, finalProps);
     }
   }
 

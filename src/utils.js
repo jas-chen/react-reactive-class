@@ -11,7 +11,7 @@ export function pickProps(props) {
   const picked = {};
   for (var key in props) {
     const value = props[key];
-    if (key !== 'mount' && !isRxObservable(value)) {
+    if (!isRxObservable(value)) {
       picked[key] = value;
     }
   }

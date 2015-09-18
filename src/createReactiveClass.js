@@ -1,5 +1,5 @@
 import React from 'react';
-import {isRxObservable, containUpperCase, pickProps} from './utils';
+import {isRxObservable, pickProps} from './utils';
 
 export default function createReactiveClass(tag) {
   class ReactiveClass extends React.Component {
@@ -7,7 +7,6 @@ export default function createReactiveClass(tag) {
       super(props);
       this.displayName = `ReactiveElement-${tag}`;
       this.state = props;
-      this.isHtmlTag = !containUpperCase(tag);
     }
 
     addPropListener(name, prop$) {
@@ -73,12 +72,8 @@ export default function createReactiveClass(tag) {
         return null;
       }
 
-      if (this.isHtmlTag) {
-        const pickedProps = pickProps(this.state);
-        return React.createElement(tag, pickedProps, this.state.children);
-      }
-
-      return React.createElement(tag, this.state, this.state.children);
+      const pickedProps = pickProps(this.state);
+      return React.createElement(tag, pickedProps, this.state.children);
     }
   }
 

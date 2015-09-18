@@ -1,58 +1,61 @@
 import React from 'react';
-import {isEventEmitter, isRxObservable} from './utils';
+import {isRxObservable} from './utils';
 
-export default function createReactiveClass(tag, providerName = 'ee', eventName = 'props') {
+export default function createReactiveClass(tag) {
   class ReactiveClass extends React.Component {
-    addListener(provider) {
-      const listener = this.setState.bind(this);
-
-      if (provider.on) {
-        provider.on(eventName, listener);
-        this.removeListener = () => {
-          provider.removeListener(eventName, listener);
-        };
-      } else {
-        const subscription = provider.subscribeOnNext(listener);
-        this.removeListener = () => {
-          subscription.dispose();
-        };
-      }
-    }
-
     constructor(props) {
       super(props);
       this.displayName = `ReactiveElement-${tag}`;
       this.state = props;
     }
 
-    componentWillMount() {
-      this.addListener(this.props[providerName]);
+    addPropListener(name, prop$) {
+      // bind?
+      return prop$.subscribeOnNext((value) => {
+        const prop = {};
+        prop[name] = value;
+        this.setState(prop);
+      });
     }
 
-    componentWillReceiveProps(nextProps) {
-      if (nextProps[providerName] !== this.props[providerName]) {
-        this.removeListener();
-        this.addListener(nextProps[providerName]);
+    subscribeProps() {
+      if (this.subscriptions) {
+        this.unsubscribeProps();
+      }
+
+      this.subscriptions = [];
+
+      for (var key in this.props) {
+        const value = this.props[key];
+        if (isRxObservable(value)) {
+          const subscription = this.addPropListener(key, value);
+          this.subscriptions.push(subscription);
+        }
       }
     }
 
+    unsubscribeProps() {
+      this.subscriptions.forEach(subscription => subscription.dispose());
+      this.subscriptions = null;
+    }
+
+    componentWillMount() {
+      this.subscribeProps();
+    }
+
+    // Do we really need this?
+    componentWillReceiveProps(nextProps) {
+      this.subscribeProps();
+    }
+
     componentWillUnmount() {
-      this.removeListener();
-      this.removeListener = null;
+      this.unsubscribeProps();
     }
 
     render() {
       return React.createElement(tag, this.state, this.state.children);
     }
   }
-
-  ReactiveClass.propTypes = {};
-  ReactiveClass.propTypes[providerName] = (props, propName) => {
-    const provider = props[propName];
-    if (!isEventEmitter(provider) && !isRxObservable(provider)) {
-      return new Error(`${propName} must be an event emitter or Rx.Observable.`);
-    }
-  };
 
   return ReactiveClass;
 }

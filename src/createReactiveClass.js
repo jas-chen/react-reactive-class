@@ -27,19 +27,14 @@ export default function createReactiveClass(tag) {
         const prop = {};
         if (name === 'mount') {
           const mount = calculateMount(value, this.state.mount);
-
-          if (mount === undefined) {
-            throw new Error("value of mount should be 'mount', 'unmount' or 'toggle'");
-          }
-
-          // prevent unnecessary re-rendering
-          if (mount === this.state.mount) {
-            return;
-          }
-
-          prop[name] = mount;
+          prop.mount = mount;
         } else {
           prop[name] = value;
+        }
+
+        // don't re-render if value is the same.
+        if (prop[name] === this.state[name]) {
+          return;
         }
 
         this.setState(prop);

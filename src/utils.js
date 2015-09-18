@@ -28,6 +28,6 @@ export function calculateMount(type, currentMount) {
   case 'toggle':
     return !currentMount;
   default:
-    return undefined;
+    throw new Error("value of mount should be 'mount', 'unmount' or 'toggle'");
   }
 }

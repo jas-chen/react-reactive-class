@@ -1,5 +1,5 @@
 import React from 'react';
-import {isRxObservable} from './utils';
+import {isRxObservable, containUpperCase, pickProps} from './utils';
 
 export default function createReactiveClass(tag) {
   class ReactiveClass extends React.Component {
@@ -7,13 +7,29 @@ export default function createReactiveClass(tag) {
       super(props);
       this.displayName = `ReactiveElement-${tag}`;
       this.state = props;
+      this.isHtmlTag = !containUpperCase(tag);
     }
 
     addPropListener(name, prop$) {
-      // bind?
       return prop$.subscribeOnNext((value) => {
         const prop = {};
-        prop[name] = value;
+        if (name === 'mount') {
+          prop[name] = (
+            value === 'mount' ? true
+            : value === 'unmount' ? false
+            : value === 'toggle' ? !this.state[name]
+            : undefined
+          );
+
+          if (prop[name] === undefined) {
+            console.error(`value of ${name} should be 'mount', 'unmount' or 'toggle'`);
+            return;
+          }
+        }
+        else {
+          prop[name] = value;
+        }
+
         this.setState(prop);
       });
     }
@@ -53,6 +69,15 @@ export default function createReactiveClass(tag) {
     }
 
     render() {
+      if (this.state.mount === false) {
+        return null;
+      }
+
+      if (this.isHtmlTag) {
+        const pickedProps = pickProps(this.state);
+        return React.createElement(tag, pickedProps, this.state.children);
+      }
+
       return React.createElement(tag, this.state, this.state.children);
     }
   }

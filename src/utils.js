@@ -9,7 +9,7 @@ export function isRxObservable(o) {
 
 export function pickProps(props) {
   const picked = {};
-  for (var key in props) {
+  for (const key in props) { // eslint-disable-line guard-for-in
     const value = props[key];
     if (!isRxObservable(value)) {
       picked[key] = value;
@@ -17,4 +17,17 @@ export function pickProps(props) {
   }
 
   return picked;
+}
+
+export function calculateMount(type, currentMount) {
+  switch (type) {
+  case 'mount':
+    return true;
+  case 'unmount':
+    return false;
+  case 'toggle':
+    return !currentMount;
+  default:
+    return undefined;
+  }
 }

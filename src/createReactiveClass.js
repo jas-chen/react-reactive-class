@@ -1,5 +1,5 @@
 import React from 'react';
-import {isRxObservable, pickProps} from './utils';
+import {isRxObservable, pickProps, calculateMount} from './utils';
 
 export default function createReactiveClass(tag) {
   class ReactiveClass extends React.Component {
@@ -10,30 +10,35 @@ export default function createReactiveClass(tag) {
       this.state.mount = true;
     }
 
+    componentWillMount() {
+      this.subscribe(this.props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+      this.subscribe(nextProps);
+    }
+
+    componentWillUnmount() {
+      this.unsubscribe();
+    }
+
     addPropListener(name, prop$) {
       return prop$.subscribeOnNext((value) => {
         const prop = {};
         if (name === 'mount') {
-          const mount = (
-            value === 'mount' ? true
-            : value === 'unmount' ? false
-            : value === 'toggle' ? !this.state.mount
-            : undefined
-          );
+          const mount = calculateMount(value, this.state.mount);
 
           if (mount === undefined) {
-            console.error("value of mount should be 'mount', 'unmount' or 'toggle'");
-            return;
+            throw new Error("value of mount should be 'mount', 'unmount' or 'toggle'");
           }
 
-          // prevent unnecessary re-render
+          // prevent unnecessary re-rendering
           if (mount === this.state.mount) {
             return;
           }
 
           prop[name] = mount;
-        }
-        else {
+        } else {
           prop[name] = value;
         }
 
@@ -41,15 +46,15 @@ export default function createReactiveClass(tag) {
       });
     }
 
-    subscribeProps() {
+    subscribe(props) {
       if (this.subscriptions) {
-        this.unsubscribeProps();
+        this.unsubscribe();
       }
 
       this.subscriptions = [];
 
-      for (var key in this.props) {
-        const value = this.props[key];
+      for (const key in props) { // eslint-disable-line guard-for-in
+        const value = props[key];
         if (isRxObservable(value)) {
           const subscription = this.addPropListener(key, value);
           this.subscriptions.push(subscription);
@@ -57,21 +62,9 @@ export default function createReactiveClass(tag) {
       }
     }
 
-    unsubscribeProps() {
+    unsubscribe() {
       this.subscriptions.forEach(subscription => subscription.dispose());
       this.subscriptions = null;
-    }
-
-    componentWillMount() {
-      this.subscribeProps();
-    }
-
-    componentWillReceiveProps(nextProps) {
-      this.subscribeProps();
-    }
-
-    componentWillUnmount() {
-      this.unsubscribeProps();
     }
 
     render() {
@@ -80,7 +73,7 @@ export default function createReactiveClass(tag) {
       }
 
       const finalProps = {};
-      for (var key in this.state) {
+      for (const key in this.state) {
         if (key !== 'mount') {
           finalProps[key] = this.state[key];
         }

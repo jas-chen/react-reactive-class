@@ -7,11 +7,11 @@ export function isRxObservable(o) {
   return valid;
 }
 
-export function pickProps(props) {
+export function pickProps(props, validator) {
   const picked = {};
   for (const key in props) { // eslint-disable-line guard-for-in
     const value = props[key];
-    if (!isRxObservable(value)) {
+    if (validator(key, value)) {
       picked[key] = value;
     }
   }

@@ -6,7 +6,7 @@ export default function createReactiveClass(tag) {
     constructor(props) {
       super(props);
       this.displayName = `ReactiveElement-${tag}`;
-      this.state = pickProps(props);
+      this.state = pickProps(props, (key, value) => !isRxObservable(value));
       this.state.mount = true;
     }
 
@@ -72,13 +72,7 @@ export default function createReactiveClass(tag) {
         return null;
       }
 
-      const finalProps = {};
-      for (const key in this.state) {
-        if (key !== 'mount') {
-          finalProps[key] = this.state[key];
-        }
-      }
-
+      const finalProps = pickProps(this.state, (key) => key !== 'mount');
       return React.createElement(tag, finalProps);
     }
   }

@@ -13,17 +13,25 @@ export default function createReactiveClass(tag) {
       return prop$.subscribeOnNext((value) => {
         const prop = {};
         if (name === 'mount') {
-          prop[name] = (
+          const mount = (
             value === 'mount' ? true
             : value === 'unmount' ? false
-            : value === 'toggle' ? !this.state[name]
+            : value === 'toggle' ? !this.state.mount
             : undefined
           );
 
-          if (prop[name] === undefined) {
+          if (mount === undefined) {
             console.error(`value of ${name} should be 'mount', 'unmount' or 'toggle'`);
             return;
           }
+
+          // prevent unnecessary re-render
+          if ( (typeof this.state.mount !== 'boolean' && mount)
+              || (mount === this.state.mount)) {
+            return;
+          }
+
+          prop[name] = mount;
         }
         else {
           prop[name] = value;
@@ -54,26 +62,50 @@ export default function createReactiveClass(tag) {
       this.subscriptions = null;
     }
 
+    getElementInfo() {
+      return {
+        DOMNode: React.findDOMNode(this),
+        props: this.pickedProps
+      } ;
+    }
+
     componentWillMount() {
       this.subscribeProps();
     }
 
-    // Do we really need this?
+    componentDidMount() {
+      if (this.props.onDidMount) {
+        this.props.onDidMount(this.getElementInfo());
+      }
+    }
+
     componentWillReceiveProps(nextProps) {
       this.subscribeProps();
     }
 
+    componentDidUpdate() {
+      if (this.props.onDidUpdate) {
+        this.props.onDidUpdate(this.getElementInfo());
+      }
+    }
+
     componentWillUnmount() {
       this.unsubscribeProps();
+      this.pickedProps = null;
+
+      if (this.props.onWillUnmount) {
+        this.props.onWillUnmount();
+      }
     }
 
     render() {
+      // this.state.mount may be undefined, don't use ! operator here.
       if (this.state.mount === false) {
         return null;
       }
 
-      const pickedProps = pickProps(this.state);
-      return React.createElement(tag, pickedProps, this.state.children);
+      this.pickedProps = pickProps(this.state);
+      return React.createElement(tag, this.pickedProps, this.state.children);
     }
   }
 

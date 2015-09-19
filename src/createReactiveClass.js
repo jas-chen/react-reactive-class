@@ -24,24 +24,19 @@ export default function createReactiveClass(tag) {
 
     addPropListener(name, prop$) {
       return prop$.subscribeOnNext((value) => {
-        const finalName =
-          name.charAt(name.length - 1) === '$'
-            ? name.substr(0, name.length - 1)
-            : name;
-
         const finalValue =
-          finalName === 'mount'
+          name === 'mount'
             ? calculateMount(value, this.state.mount)
             : value;
 
 
         // don't re-render if value is the same.
-        if (finalValue === this.state[finalName]) {
+        if (finalValue === this.state[name]) {
           return;
         }
 
         const prop = {};
-        prop[finalName] = finalValue;
+        prop[name] = finalValue;
         this.setState(prop);
       });
     }

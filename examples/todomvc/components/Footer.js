@@ -10,7 +10,7 @@ const FILTER_TITLES = {
   [SHOW_COMPLETED]: 'Completed'
 };
 
-const {a:A, span: Span, strong: Strong, button: Button} = dom;
+const {a:A, span: Span, strong: Strong, button: Button, footer: Footer} = dom;
 
 function renderTodoCount(activeCount$) {
   const itemWord$ = activeCount$.map(activeCount => {
@@ -48,14 +48,14 @@ function footer({todos$, completedCount$, filter$, onShow}) {
     return todos.filter(todo => !todo.completed).length;
   });;
 
-  const mount$ = todos$.map(todos => !!todos.length);
+  const hasTodo$ = todos$.map(todos => !!todos.length);
 
   const clickClearCompletedBtn$ = new Subject();
 
   const onShow$ = new Subject();
 
   const element = (
-    <footer className="footer" mount={mount$}>
+    <Footer className="footer" mount={hasTodo$}>
       {renderTodoCount(activeCount$)}
       <ul className="filters">
         {[SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED].map(filter =>
@@ -69,7 +69,7 @@ function footer({todos$, completedCount$, filter$, onShow}) {
               onClick={clickClearCompletedBtn$.onNext.bind(clickClearCompletedBtn$)} >
         Clear completed
       </Button>
-    </footer>
+    </Footer>
   );
 
   return {

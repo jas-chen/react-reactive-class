@@ -2,14 +2,15 @@
 
 [![npm version](https://img.shields.io/npm/v/react-reactive-class.svg?style=flat-square)](https://www.npmjs.com/package/react-reactive-class)
 
+## What?
 With React Reactive Class, you can create Reactive Components, which
-listen to events and re-render themselves.
+subscribe Rx.Observables and re-render themselves.
 
-`react-reactive-class` comes with a set of reactive DOM elements (button, div, span, etc) and a function to wrap your component to be a Reactive Component.
+## Features
 
-Once you created a Reactive Component, you pass a `props provider` to it, and it will listen to the provider, when the provider emits new props, Reactive Component will re-render itself.
+- **Reactive DOM elements**: A set of reactive DOM elements (button, div, span, etc).
 
-You can use Event Emitter or Rx.Observable as `props provider`.
+- **Reactive wrapper**: A higher order component to wrap your existing component to be a Reactive Component.
 
 ## Installation
 ```
@@ -21,15 +22,14 @@ npm install --save react-reactive-class
 ### Use reactive DOM elements
 ```javascript
 import React from 'react';
-import {EventEmitter} from 'events';
 import Rx from 'rx';
 
 import {dom} from 'react-reactive-class';
 
-const {div:Xdiv} = dom;
+const { div:Div, span:Span } = dom;
 
-window.ee = new EventEmitter();
-window.props$ = new Rx.Subject();
+window.style$ = new Rx.Subject();
+window.text$ = new Rx.Subject();
 
 class App extends React.Component {
   render() {
@@ -37,8 +37,9 @@ class App extends React.Component {
 
     return (
       <div>
-        <Xdiv ee={window.ee}>Will listen to Event Emitter</Xdiv>
-        <Xdiv ee={window.props$}>Will subscribe to Rx.Observable</Xdiv>
+        <h1>Demo</h1>
+        <Div style={window.style$}>Hello</Div>
+        <Span>{window.text$}</Span>
       </div>
     );
   }
@@ -47,13 +48,12 @@ class App extends React.Component {
 React.render(<App />, document.getElementById('app'));
 
 // notice that App will not re-render, nice!
-window.ee.emit('props', {children: 'Awesome!'});
-window.ee.emit('props', {style: {color: 'red'}});
-window.props$.onNext({style: {color: 'blue'}});
+window.props$.onNext({color: 'blue'});
+window.text$.onNext('Reactive!');
 // you can open your console and play around
 ```
 
-### Use reactive() function to wrap your component
+### Use Reactive wrapper
 
 #### ES5/ES6
 ```javascript
@@ -84,23 +84,27 @@ class XText extends React.Component {
 }
 ```
 
-### Config Reactive Component
-By default, the props provider attribute is `ee` and Reactive Component will listen to `props` event. You can custom those values.
-
-> Event name has no effect when using Rx.Observable as props provider.
-
-#### ES5/ES6
+### Mount/unmount Reactive Component
+Reactively compose components!
 ```javascript
-const XText = reactive(Text, 'awesomeProvider', 'new-props');
-
-<XText awesomeProvider={window.ee} />
-window.ee.emit('new-props', {children: 'Awesome!'});
+// If text's length is 0, unmount this component
+<Span mount={ text$.map(text => text.length) }>
+  {text$}
+</Span>
 ```
 
-#### ES7
+## Child component constraint
+Source must be the only child when using observable as child component.
 ```javascript
-@reactive('awesomeProvider', 'new-props')
-class XText extends React.Component { ... }
+// This will not work
+<Span>
+  Hello {name$}, how are you?
+</Span>
+
+// This will work
+<span>
+  Hello <Span>{name$}</Span>, how are you?
+</span>
 ```
 
 ## Feedbacks are welcome!

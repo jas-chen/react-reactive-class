@@ -1,6 +1,6 @@
-[![npm version](https://img.shields.io/npm/v/react-reactive-class.svg?style=flat-square)](https://www.npmjs.com/package/react-reactive-class)
-
 # React Reactive Class
+
+[![npm version](https://img.shields.io/npm/v/react-reactive-class.svg?style=flat-square)](https://www.npmjs.com/package/react-reactive-class)
 
 With React Reactive Class, you can create Reactive Components, which
 listen to events and re-render themselves.
@@ -52,8 +52,6 @@ window.ee.emit('props', {style: {color: 'red'}});
 window.props$.onNext({style: {color: 'blue'}});
 // you can open your console and play around
 ```
-
-![Demo](./doc/demo.gif)
 
 ### Use reactive() function to wrap your component
 

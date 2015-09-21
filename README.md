@@ -48,7 +48,7 @@ class App extends React.Component {
 React.render(<App />, document.getElementById('app'));
 
 // notice that App will not re-render, nice!
-window.props$.onNext({color: 'blue'});
+window.style$.onNext({color: 'blue'});
 window.text$.onNext('Reactive!');
 // you can open your console and play around
 ```
@@ -57,6 +57,8 @@ window.text$.onNext('Reactive!');
 
 #### ES5/ES6
 ```javascript
+import {reactive} from 'react-reactive-class';
+
 class Text extends React.Component {
   render() {
     console.log('Text rendered.');
@@ -72,6 +74,8 @@ const XText = reactive(Text);
 
 #### ES7
 ```javascript
+import {reactive} from 'react-reactive-class';
+
 @reactive
 class XText extends React.Component {
   render() {
@@ -87,7 +91,7 @@ class XText extends React.Component {
 ### Mount/unmount Reactive Component
 Reactively compose components!
 ```javascript
-// If text's length is 0, unmount this component
+// Unmount this component if length of incoming text is 0.
 <Span mount={ text$.map(text => text.length) }>
   {text$}
 </Span>

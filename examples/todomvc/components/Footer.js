@@ -44,9 +44,9 @@ function renderFilterLink(filter, selectedFilter$, onShow) {
 }
 
 function footer({todos$, completedCount$, filter$, onShow}) {
-  const activeCount$ = todos$.map(todos => {
-    return todos.filter(todo => !todo.completed).length;
-  });;
+  const activeCount$ = todos$.map(
+    todos => todos.filter(todo => !todo.completed).length
+  );
 
   const hasTodo$ = todos$.map(todos => !!todos.length);
 

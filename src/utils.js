@@ -9,25 +9,13 @@ export function isRxObservable(o) {
 
 export function pickProps(props, validator) {
   const picked = {};
-  for (const key in props) { // eslint-disable-line guard-for-in
+
+  Object.keys(props).forEach(key => {
     const value = props[key];
     if (validator(key, value)) {
       picked[key] = value;
     }
-  }
+  });
 
   return picked;
-}
-
-export function calculateMount(type, currentMount) {
-  switch (type) {
-  case 'mount':
-    return true;
-  case 'unmount':
-    return false;
-  case 'toggle':
-    return !currentMount;
-  default:
-    throw new Error("value of mount should be 'mount', 'unmount' or 'toggle'");
-  }
 }

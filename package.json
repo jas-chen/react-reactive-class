@@ -1,6 +1,6 @@
 {
   "name": "react-reactive-class",
-  "version": "0.1.3",
+  "version": "1.0.0",
   "description": "create reactive react classes",
   "main": "lib/index.js",
   "repository": {

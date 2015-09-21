@@ -35,14 +35,12 @@ function todoItem(props) {
 
   const {
     element: TodoTextInput,
-    events: { save$ }
   } = todoTextInput({
     text: todo.text,
     newTodo: false,
-    editing: true
+    editing: true,
+    onSave: handleSave
   });
-
-  save$.subscribe(handleSave);
 
   const Todo = (
     <div className="view">

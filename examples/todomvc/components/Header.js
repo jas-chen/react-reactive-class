@@ -1,14 +1,16 @@
 import React from 'react';
-import { Observable } from 'rx';
+import { Observable, Subject } from 'rx';
 import todoTextInput from './TodoTextInput';
 
 function header() {
+  const save$ = new Subject();
+
   const {
-    element: TodoTextInput,
-    events: { save$ }
+    element: TodoTextInput
   } = todoTextInput({
     newTodo: true,
-    placeholder: "What needs to be done?"
+    placeholder: "What needs to be done?",
+    onSave: save$.onNext.bind(save$)
   });
 
   const element = (

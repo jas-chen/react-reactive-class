@@ -6,31 +6,32 @@ import { initSubject } from '../utils';
 
 const { input:Input } = dom;
 
-function todoTextInput({text, newTodo, editing, placeholder}) {
+function todoTextInput({text, newTodo, editing, placeholder, onSave}) {
   const { $: text$, onNext: setText} = initSubject(text || '');
-  const save$ = new Subject();
 
   const className = classnames({
     edit: editing,
     'new-todo': newTodo
   });
 
+  function save(text) {
+    onSave(text);
+    setText('');
+  }
+
   function handleSubmit(e) {
     const text = e.target.value.trim();
     if (e.which === 13) {
-      save$.onNext(text);
+      save(text);
     }
   }
 
   function handleBlur(e) {
     const text = e.target.value.trim();
     if (!newTodo) {
-      save$.onNext(text);
+      save(text);
     }
   }
-
-  // clear input after saving
-  save$.filter(() => newTodo).subscribe(() => setText(''));
 
   const element = (
     <Input className={className}
@@ -43,12 +44,7 @@ function todoTextInput({text, newTodo, editing, placeholder}) {
       onKeyDown={handleSubmit} />
   );
 
-  return {
-    element,
-    events: {
-      save$
-    }
-  };
+  return { element };
 }
 
 export default todoTextInput;

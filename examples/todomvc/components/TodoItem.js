@@ -2,20 +2,14 @@ import React from 'react';
 import { Subject } from 'rx';
 import { dom } from 'react-reactive-class';
 import classnames from 'classnames';
+import { initSubject } from '../utils';
 import todoTextInput from './TodoTextInput';
 
-const {li:Li} = dom;
+const { li: Li } = dom;
 
-function createEditing$(initValue) {
-  const editing$ = new Subject();
-  return {
-    editing$: editing$.startWith(initValue),
-    setEditing: editing$.onNext.bind(editing$)
-  }
-}
-
-function todoItem({key, todo, deleteTodo, completeTodo, editTodo}) {
-  const {editing$, setEditing} = createEditing$(false);
+function todoItem(props) {
+  const { key, todo, deleteTodo, completeTodo, editTodo } = props;
+  const { $: editing$, onNext: setEditing } = initSubject(false);
 
   function handleDoubleClick() {
     setEditing(true);
@@ -39,41 +33,33 @@ function todoItem({key, todo, deleteTodo, completeTodo, editTodo}) {
     })
   );
 
+  const {
+    element: TodoTextInput,
+    events: { save$ }
+  } = todoTextInput({
+    text: todo.text,
+    newTodo: false,
+    editing: true
+  });
+
+  save$.subscribe(handleSave);
+
+  const Todo = (
+    <div className="view">
+      <input className="toggle"
+             type="checkbox"
+             checked={todo.completed}
+             onChange={() => completeTodo({id: todo.id})} />
+      <label onDoubleClick={handleDoubleClick}>
+        {todo.text}
+      </label>
+      <button className="destroy"
+              onClick={() => deleteTodo({id: todo.id})} />
+    </div>
+  );
+
   const Todo$ = editing$.map(
-    editing => {
-      const {
-        element: TodoTextInput,
-        events: {
-          save$
-        }
-      } = todoTextInput({
-        text: todo.text,
-        newTodo: false,
-        editing
-      });
-
-      save$.subscribe(handleSave);
-
-      return (
-        editing
-        ? (
-          TodoTextInput
-        )
-        : (
-          <div className="view">
-            <input className="toggle"
-                   type="checkbox"
-                   checked={todo.completed}
-                   onChange={() => completeTodo({id: todo.id})} />
-            <label onDoubleClick={handleDoubleClick}>
-              {todo.text}
-            </label>
-            <button className="destroy"
-                    onClick={() => deleteTodo({id: todo.id})} />
-          </div>
-        )
-      );
-    }
+    editing => editing ? TodoTextInput: Todo
   );
 
   const element = (
@@ -82,9 +68,7 @@ function todoItem({key, todo, deleteTodo, completeTodo, editTodo}) {
     </Li>
   );
 
-  return {
-    element
-  }
+  return { element };
 }
 
 export default todoItem;

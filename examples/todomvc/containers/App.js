@@ -14,7 +14,7 @@ function app({todos$}) {
     element: MainSection,
     events: {
       toggleAll$,
-      clickClearCompletedBtn$,
+      clearCompleted$,
       deleteTodo$,
       completeTodo$,
       editTodo$
@@ -33,7 +33,7 @@ function app({todos$}) {
     events: {
       save$,
       toggleAll$,
-      clickClearCompletedBtn$,
+      clearCompleted$,
       deleteTodo$,
       completeTodo$,
       editTodo$

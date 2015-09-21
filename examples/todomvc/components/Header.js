@@ -5,9 +5,7 @@ import todoTextInput from './TodoTextInput';
 function header() {
   const {
     element: TodoTextInput,
-    events: {
-      save$
-    }
+    events: { save$ }
   } = todoTextInput({
     newTodo: true,
     placeholder: "What needs to be done?"
@@ -23,7 +21,7 @@ function header() {
   return {
     element,
     events: {
-      save$
+      save$: save$.filter(text => text.length)
     }
   };
 }

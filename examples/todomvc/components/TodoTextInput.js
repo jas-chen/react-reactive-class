@@ -2,20 +2,12 @@ import React from 'react';
 import { Observable, Subject } from 'rx';
 import { dom } from 'react-reactive-class';
 import classnames from 'classnames';
+import { initSubject } from '../utils';
 
-const {input:Input} = dom;
-
-function createText$(initValue) {
-  const text$ = new Subject();
-  return {
-    text$: text$.startWith(initValue),
-    setText: text$.onNext.bind(text$)
-  }
-}
+const { input:Input } = dom;
 
 function todoTextInput({text, newTodo, editing, placeholder}) {
-  const { text$, setText } = createText$(text || '');
-  const clickEv$ = new Subject();
+  const { $: text$, onNext: setText} = initSubject(text || '');
   const save$ = new Subject();
 
   const className = classnames({
@@ -25,7 +17,7 @@ function todoTextInput({text, newTodo, editing, placeholder}) {
 
   function handleSubmit(e) {
     const text = e.target.value.trim();
-    if (e.which === 13 && text.length) {
+    if (e.which === 13) {
       save$.onNext(text);
     }
   }
@@ -37,7 +29,6 @@ function todoTextInput({text, newTodo, editing, placeholder}) {
     }
   }
 
-  clickEv$.subscribe(e => setText(e.target.value));
   // clear input after saving
   save$.filter(() => newTodo).subscribe(() => setText(''));
 
@@ -48,7 +39,7 @@ function todoTextInput({text, newTodo, editing, placeholder}) {
       autoFocus="true"
       value={text$}
       onBlur={handleBlur}
-      onChange={clickEv$.onNext.bind(clickEv$)}
+      onChange={e => setText(e.target.value)}
       onKeyDown={handleSubmit} />
   );
 

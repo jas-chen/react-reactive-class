@@ -16,7 +16,7 @@ function handleEvant(store, events) {
     () => store.dispatch(TodoActions.completeAll())
   );
 
-  events.clickClearCompletedBtn$.subscribe(
+  events.clearCompleted$.subscribe(
     () => store.dispatch(TodoActions.clearCompleted())
   );
 

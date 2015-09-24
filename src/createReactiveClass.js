@@ -18,6 +18,10 @@ export default function createReactiveClass(tag) {
       this.subscribe(nextProps);
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+      return nextState !== this.state;
+    }
+
     componentWillUnmount() {
       this.unsubscribe();
     }

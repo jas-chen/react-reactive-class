@@ -6,9 +6,7 @@
 With React Reactive Class, you can create Reactive Components, which
 subscribe Rx.Observables and re-render themselves.
 
-## Example
-
-The following example renders a component with buttons to increment and decrement a counter.
+## Counter example
 
 You can compare this example to [Counter example of Cycle.js](https://github.com/cyclejs/cycle-examples/blob/master/counter/src/main.js) and [Counter example of Yolk](https://github.com/yolkjs/yolk#example).
 

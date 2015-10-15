@@ -63,16 +63,19 @@ npm install --save react-reactive-class
 ## Usage
 
 ### Use reactive DOM elements
+
+Example:
+
 ```javascript
+import { Subject } from 'rx';
 import React from 'react';
-import Rx from 'rx';
+import ReactDOM from 'react-dom';
+import { dom } from 'react-reactive-class';
 
-import {dom} from 'react-reactive-class';
+const { div: Div, span: Span } = dom;
 
-const { div:Div, span:Span } = dom;
-
-window.style$ = new Rx.Subject();
-window.text$ = new Rx.Subject();
+window.style$ = new Subject();
+window.text$ = new Subject();
 
 class App extends React.Component {
   render() {
@@ -88,7 +91,7 @@ class App extends React.Component {
   }
 }
 
-React.render(<App />, document.getElementById('app'));
+ReactDOM.render(<App />, document.getElementById('app'));
 
 // notice that App will not re-render, nice!
 window.style$.onNext({color: 'blue'});
@@ -100,8 +103,17 @@ window.text$.onNext('Reactive!');
 
 Take full control of component lifecycle.
 
+```
+reactive(ReactClass): ReactClass
+```
+
+Example:
+
 ```javascript
-import {reactive} from 'react-reactive-class';
+import { Observable } from 'rx';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { reactive } from 'react-reactive-class';
 
 class Text extends React.Component {
   componentWillMount() {
@@ -121,13 +133,20 @@ class Text extends React.Component {
 
 const ReactiveText = reactive(Text);
 
-// use
-<ReactiveText>{ text$ }</ReactiveText>
+
+const currentTime$ = Observable
+  .interval(1000)
+  .map(() => new Date().toLocaleString());
+
+ReactDOM.render(
+  <ReactiveText>{ currentTime$ }</ReactiveText>,
+  document.getElementById('root')
+);
 ```
 
 ### Mount/unmount Reactive Component
 
-Reactively compose components.
+You can use `mount` attribute to mount/unmount a component.
 
 ```javascript
 // Unmount this component if length of incoming text is 0.

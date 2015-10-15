@@ -53,7 +53,7 @@ ReactDOM.render(<Counter />, document.getElementById('root'));
 
 - **Reactive DOM elements**: A set of reactive DOM elements (button, div, span, etc).
 
-- **Reactive wrapper**: A higher order component to wrap your existing component to be a Reactive Component.
+- **Reactive wrapper**: A higher order component to wrap a React component to be a Reactive Component.
 
 ## Installation
 ```

@@ -13,7 +13,7 @@ The following example renders a component with buttons to increment and decremen
 You can compare this example to [Counter example of Cycle.js](https://github.com/cyclejs/cycle-examples/blob/master/counter/src/main.js) and [Counter example of Yolk](https://github.com/yolkjs/yolk#example).
 
 ```javascript
-import { Subject } from 'rx';
+import { Subject, Observable } from 'rx';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { dom } from 'react-reactive-class';
@@ -21,26 +21,24 @@ import { dom } from 'react-reactive-class';
 const { span: Span } = dom;
 
 function Counter () {
+  const plusClick$ = new Subject();
+  const minusClick$ = new Subject();
 
-  // map all plus button click events to 1
-  const handlePlus = new Subject();
-  const plusOne = handlePlus.map(() => 1);
+  const action$ = Observable.merge(
+    plusClick$.map(() => 1),
+    minusClick$.map(() => -1)
+  );
 
-  // map all minus button click events to -1
-  const handleMinus = new Subject();
-  const minusOne = handleMinus.map(() => -1);
-
-  // merge both event streams together and keep a running count of the result
-  const count = plusOne.merge(minusOne).scan((x, y) => x + y, 0).startWith(0);
+  const count$ = action$.scan((x, y) => x + y, 0).startWith(0);
 
   return (
     <div>
       <div>
-        <button id="plus" onClick={handlePlus.onNext.bind(handlePlus)}>+</button>
-        <button id="minus" onClick={handleMinus.onNext.bind(handleMinus)}>-</button>
+        <button id="plus" onClick={ (e) => plusClick$.onNext(e) }>+</button>
+        <button id="minus" onClick={ (e) => minusClick$.onNext(e) }>-</button>
       </div>
       <div>
-        Count: <Span>{count}</Span>
+        Count: <Span>{ count$ }</Span>
       </div>
     </div>
   )

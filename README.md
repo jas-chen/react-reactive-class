@@ -15,8 +15,8 @@ You can compare this example to [Counter example of Cycle.js](https://github.com
 ```javascript
 import { Subject } from 'rx';
 import React from 'react';
-import { dom } from 'react-reactive-class';
 import ReactDOM from 'react-dom';
+import { dom } from 'react-reactive-class';
 
 const { span: Span } = dom;
 

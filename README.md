@@ -1,4 +1,4 @@
-# React Reactive Class
+# React Reactive Class <small>RxJS + React</small>
 
 [![npm version](https://img.shields.io/npm/v/react-reactive-class.svg?style=flat-square)](https://www.npmjs.com/package/react-reactive-class)
 

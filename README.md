@@ -9,7 +9,7 @@ subscribe Rx.Observables and re-render themselves.
 
 ## Counter example
 
-You can compare this example to [Counter example of Cycle.js](https://github.com/cyclejs/cycle-examples/blob/master/counter/src/main.js) and [Counter example of Yolk](https://github.com/yolkjs/yolk#example).
+You can compare this example to [Counter example of Cycle.js](https://github.com/cyclejs/cyclejs/blob/master/examples/basic/counter/src/main.js) and [Counter example of Yolk](https://github.com/yolkjs/yolk#example).
 
 ```javascript
 import { Subject, Observable } from 'rx';
